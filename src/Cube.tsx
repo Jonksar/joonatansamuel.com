@@ -106,7 +106,6 @@ export default function Cube() {
     return (
         <div>
             <div className="display-linebreak monospace-font">{text}</div>
-            <div>{mouseX} {mouseY}</div>
         </div>
     );
 }
