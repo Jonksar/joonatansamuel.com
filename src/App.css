@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css?family=Space+Mono');
+
 .App {
   text-align: center;
 }
@@ -36,3 +38,12 @@
     transform: rotate(360deg);
   }
 }
+
+.display-linebreak {
+  white-space: pre-line;
+}
+
+.monospace-font {
+  font-family: 'Courier';
+}
+
