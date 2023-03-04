@@ -3,7 +3,6 @@ import './App.css';
 import Cube from "./Cube";
 
 
-
 function App() {
   return (
     <div className="App">

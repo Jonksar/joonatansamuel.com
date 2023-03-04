@@ -1,28 +1,44 @@
 import {useEffect, useState} from "react";
 
-
-function main() {
-    console.clear();
-}
-
 export default function Cube() {
-    const width = 80, height = 34;
-    const [counter, setCounter] = useState(0);
+    const pi = 3.14159265359;
+    const width = 130, height = 60;
     const [text, setText] = useState("");
+    const [A, setA] = useState(pi / 4);
+    const [B, setB] = useState(0);
+    const [C, setC] = useState(pi / 4);
+
+    const [mouseX, setMouseX] = useState(0)
+    const [mouseY, setMouseY] = useState(0)
+    useEffect(
+        () => {
+            const update = (e) => {
+                setMouseX(e.x)
+                setMouseY(e.y)
+            }
+            window.addEventListener('mousemove', update)
+            window.addEventListener('touchmove', update)
+            return () => {
+                window.removeEventListener('mousemove', update)
+                window.removeEventListener('touchmove', update)
+            }
+        },
+        [setMouseX, setMouseY]
+    )
 
     const sin = Math.sin;
     const cos = Math.cos;
 
     const zBuffer = new Float32Array(width * height);
-    const backgroundASCIICode = '.';
+    const backgroundASCIICode = ' ';
     const distanceFromCam = 100;
     const incrementSpeed = 1.0;
 
     const buffer = new Array(width * height).fill(backgroundASCIICode);
     // rotations in radians
-    let A = 0, B = 0, C = 0;
-    let cubeWidth = 10;
-    let horizontalOffset = -2 * cubeWidth;
+
+    const cubeWidth = width / 6;
+    const horizontalOffset = 0;
     let K1 = 40;
 
     function calculateX(i, j, k) {
@@ -58,20 +74,15 @@ export default function Cube() {
 
     useEffect(() => {
         const interval = setInterval(() => {
-            setCounter((prevCounter) => prevCounter + 1);
-
-
             buffer.fill(backgroundASCIICode);
             zBuffer.fill(0);
-            cubeWidth = width / 4;
-            horizontalOffset = 0;
 
             for (let cubeX = -cubeWidth; cubeX < cubeWidth; cubeX += incrementSpeed) {
                 for (let cubeY = -cubeWidth; cubeY < cubeWidth; cubeY += incrementSpeed) {
-                    calculateForSurface(cubeX, cubeY, -cubeWidth, '@');
+                    calculateForSurface(cubeX, cubeY, -cubeWidth, '€');
                     calculateForSurface(cubeWidth, cubeY, cubeX, '$');
                     calculateForSurface(-cubeWidth, cubeY, -cubeX, '~');
-                    calculateForSurface(-cubeX, cubeY, cubeWidth, '#');
+                    calculateForSurface(-cubeX, cubeY, cubeWidth, '¥');
                     calculateForSurface(cubeX, -cubeWidth, -cubeY, ';');
                     calculateForSurface(cubeX, cubeWidth, cubeY, '+');
                 }
@@ -83,16 +94,19 @@ export default function Cube() {
             }
             setText(resultText);
 
-            A += 0.005;
-            B += 0.004;
-            C += 0.001;
+            setA(A + 0.01);
+            setB(-mouseY * 2 * pi / 800);
+            setC(mouseX * 2 * pi / 1600);
 
         }, 10);
 
         return () => clearInterval(interval);
-    }, []);
+    }, [A, B, C]);
 
     return (
-        <div className="display-linebreak monospace-font">{text}</div>
+        <div>
+            <div className="display-linebreak monospace-font">{text}</div>
+            <div>{mouseX} {mouseY}</div>
+        </div>
     );
 }
